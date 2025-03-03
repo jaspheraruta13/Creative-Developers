@@ -291,6 +291,70 @@
             alert("You have logged out.");
             window.location.href = "LogIn.html";
         }
+        function loadPostedJobs() {
+        const jobListContainer = document.getElementById("jobs-container");
+        jobListContainer.innerHTML = ""; // Clear previous job list
+
+        const loggedInUser = localStorage.getItem("loggedInUser");
+        let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+
+        // Filter jobs by the logged-in client
+        const userJobs = jobs.filter(job => job.clientEmail === loggedInUser);
+
+        if (userJobs.length === 0) {
+            jobListContainer.innerHTML = "<p>You have not posted any jobs yet.</p>";
+            return;
+        }
+
+        // Display jobs
+        userJobs.forEach((job, index) => {
+            const jobElement = document.createElement("div");
+            jobElement.classList.add("job");
+            jobElement.innerHTML = `
+                <h3>${job.title}</h3>
+                <p>${job.description}</p>
+                <p><strong>Budget:</strong> $${job.budget}</p>
+                <p><small>Posted on: ${job.posted_at}</small></p>
+                <button onclick="deleteJob(${index})">❌ Delete Job</button>
+                <h4>Applicants:</h4>
+                <div id="applicants-${index}">
+                    ${job.applicants.length > 0 ? job.applicants.map((app, appIndex) => `
+                        <p>${app.name} - ${app.email}
+                            <button onclick="acceptApplicant(${index}, ${appIndex})">✅ Accept</button>
+                            <button onclick="rejectApplicant(${index}, ${appIndex})">❌ Reject</button>
+                        </p>
+                    `).join("") : "<p>No applicants yet.</p>"}
+                </div>
+            `;
+            jobListContainer.appendChild(jobElement);
+        });
+    }
+
+    function deleteJob(jobIndex) {
+        let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+        jobs = jobs.filter((_, index) => index !== jobIndex);
+        localStorage.setItem("jobs", JSON.stringify(jobs));
+        loadPostedJobs();
+        alert("Job deleted successfully.");
+    }
+
+    function acceptApplicant(jobIndex, appIndex) {
+        let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+        jobs[jobIndex].applicants[appIndex].status = "Accepted";
+        localStorage.setItem("jobs", JSON.stringify(jobs));
+        loadPostedJobs();
+        alert("Applicant accepted.");
+    }
+
+    function rejectApplicant(jobIndex, appIndex) {
+        let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+        jobs[jobIndex].applicants.splice(appIndex, 1);
+        localStorage.setItem("jobs", JSON.stringify(jobs));
+        loadPostedJobs();
+        alert("Applicant rejected.");
+    }
+
+    window.onload = loadPostedJobs;
 
     </script>
 
