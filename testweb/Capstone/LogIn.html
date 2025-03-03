@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelancer Marketplace - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background: linear-gradient(to right, #007bff, #00d4ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transition: background 0.5s ease-in-out;
+        }
+        .login-container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 320px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .login-container:hover {
+            transform: scale(1.02);
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border 0.3s;
+        }
+        input:focus {
+            border: 1px solid #007bff;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .toggle, .forgot-password {
+            margin-top: 10px;
+            color: #007bff;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .toggle:hover, .forgot-password:hover {
+            color: #0056b3;
+        }
+        #userType, #name, #phone, #profilePic {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2 id="form-title">Login</h2>
+        <input type="email" id="email" placeholder="Enter your email" required>
+        <input type="password" id="password" placeholder="Enter your password" required>
+        <input type="text" id="name" placeholder="Enter your name">
+        <input type="tel" id="phone" placeholder="Enter your phone number">
+        <select id="userType">
+            <option value="developer">Developer</option>
+            <option value="client">Client</option>
+        </select>
+        <input type="file" id="profilePic" accept="image/*">
+        <button onclick="handleAuth()">Login</button>
+        <p class="forgot-password" onclick="forgotPassword()">Forgot Password?</p>
+        <p class="toggle" onclick="toggleForm()">Don't have an account? Sign up</p>
+    </div>
+
+    <script>
+        let isLogin = true;
+
+        function toggleForm() {
+            isLogin = !isLogin;
+            document.getElementById("form-title").innerText = isLogin ? "Login" : "Sign Up";
+            document.querySelector("button").innerText = isLogin ? "Login" : "Sign Up";
+            document.querySelector(".toggle").innerText = isLogin ? "Don't have an account? Sign up" : "Already have an account? Login";
+            
+            document.getElementById("userType").style.display = isLogin ? "none" : "block";
+            document.getElementById("name").style.display = isLogin ? "none" : "block"; 
+            document.getElementById("phone").style.display = isLogin ? "none" : "block"; 
+            document.getElementById("profilePic").style.display = isLogin ? "none" : "block"; 
+        }
+
+        function handleAuth() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const name = document.getElementById("name").value;
+            const phone = document.getElementById("phone").value;
+            const userType = document.getElementById("userType").value;
+            const profilePicInput = document.getElementById("profilePic");
+
+            if (!email || !password) {
+                alert("Please enter both email and password.");
+                return;
+            }
+
+            // Admin login check
+            if (email === "prince.aruta13@gmail.com" && password === "Iloveuren") {
+                alert("Admin Login Successful!");
+                localStorage.setItem("loggedInUser", email);
+                window.location.href = "Admin.html";
+                return;
+            }
+
+            if (isLogin) {
+                const user = JSON.parse(localStorage.getItem(email));
+                if (user && user.password === password) {
+                    alert("Login successful!");
+                    localStorage.setItem("loggedInUser", email);
+                    window.location.href = user.userType === "developer" ? "Dashboard.html" : "Clients.html";
+                } else {
+                    alert("Invalid credentials.");
+                }
+            } else {
+                if (localStorage.getItem(email)) {
+                    alert("User already exists. Try logging in.");
+                } else {
+                    if (!name || !phone) {
+                        alert("Please enter your name and phone number.");
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const profilePic = e.target.result;
+
+                        const newUser = {
+                            name,
+                            phone,
+                            password,
+                            userType,
+                            profilePic
+                        };
+
+                        localStorage.setItem(email, JSON.stringify(newUser));
+                        alert("Sign up successful! You can now log in.");
+                        toggleForm();
+                    };
+
+                    if (profilePicInput.files.length > 0) {
+                        reader.readAsDataURL(profilePicInput.files[0]); 
+                    } else {
+                        const newUser = { name, phone, password, userType, profilePic: "" };
+                        localStorage.setItem(email, JSON.stringify(newUser));
+                        alert("Sign up successful! You can now log in.");
+                        toggleForm();
+                    }
+                }
+            }
+        }
+
+        function forgotPassword() {
+            const email = prompt("Enter your registered email:");
+            if (!email) return;
+
+            const user = JSON.parse(localStorage.getItem(email));
+            if (!user) {
+                alert("No account found with this email.");
+                return;
+            }
+
+            const phoneInput = prompt("Enter your registered phone number:");
+            if (phoneInput !== user.phone) {
+                alert("Incorrect phone number. Password reset failed.");
+                return;
+            }
+
+            const newPassword = prompt("Enter your new password:");
+            if (!newPassword) {
+                alert("Password cannot be empty.");
+                return;
+            }
+
+            user.password = newPassword;
+            localStorage.setItem(email, JSON.stringify(user));
+            alert("Password reset successful! You can now log in.");
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            display: flex;
+            height: 100vh;
+            background-color: #bfe6f8;
+        }
+        .sidebar {
+            width: 250px;
+            background: #343a40;
+            color: white;
+            padding-top: 20px;
+            position: fixed;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: 0.3s ease-in-out;
+        }
+        .profile {
+            padding: 10px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .glow-border {
+            width: 85px;
+            height: 85px;
+            position: absolute;
+            top: 7.7px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
+            background: conic-gradient(transparent 70%, #2cf6fd);
+            animation: spin 2s linear infinite;
+            z-index: 1;
+            box-shadow: 0 0 8px #2cf6fd;
+        }
+        @keyframes spin {
+            0% { transform: translateX(-50%) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg); }
+        }
+        .profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+        }
+        .profile h3 {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+        .profile p {
+            font-size: 14px;
+            color: #ddd;
+        }
+        .nav-links {
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        
+        .sidebar button {
+            display: block;
+            width: 90%;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 8px auto;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .sidebar button:hover {
+            background: linear-gradient(to right, #007bff, #0056b3);
+        }
+        .main-content {
+            margin-left: 250px;
+            flex-grow: 1;
+            padding: 20px;
+            transition: 0.3s ease-in-out;
+        }
+        .section {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        /* Responsive Design */
+       /* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+        left: -200px;
+        position: fixed;
+        transition: left 0.3s ease-in-out;
+    }
+    .sidebar.open {
+        left: 0;
+    }
+    .menu-toggle {
+        display: block;
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        background: #007bff;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 1000;
+    }
+    .main-content {
+        margin-left: 0;
+        padding: 15px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .sidebar {
+        width: 160px;
+    }
+    .sidebar button {
+        font-size: 14px;
+        padding: 10px;
+    }
+    .main-content {
+        margin-left: 0;
+        padding: 10px;
+    }
+    .profile h3, .profile p {
+        font-size: 12px;
+    }
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
+
+    <div class="sidebar">
+        <div class="profile">
+            <div class="glow-border"></div>
+            <img src="assets/Mypic2.jpg" alt="Profile Picture" id="profile-pic">
+            <h3 id="profile-name">Admin</h3>
+            <p id="profile-email">Prince.aruta13@gmail.com</p>
+        </div>
+        <div class="nav-links">
+            <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <h2>Admin Dashboard</h2>
+
+        <div id="clients-section" class="section">
+            <h3>Clients Users</h3>
+            <p>Total Clients: <span id="total-clients">0</span></p>
+            <div id="clients-list"></div>
+        </div>
+
+        <div id="developers-section" class="section">
+            <h3>Developer Users</h3>
+            <p>Total Developers: <span id="total-developers">0</span></p>
+            <div id="developers-list"></div>
+        </div>
+
+        <div id="jobs-section" class="section">
+            <h3>All Job Postings</h3>
+            <div id="jobs-list"></div>
+        </div>
+    </div>
+
+    <script>
+        function getAllUsers() {
+            let users = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.includes("@")) {  
+                    const userData = JSON.parse(localStorage.getItem(key));
+                    if (userData && userData.userType) {
+                        users.push({ email: key, ...userData });
+                    }
+                }
+            }
+            return users;
+        }
+    
+        function loadClients() {
+            const users = getAllUsers();
+            const clients = users.filter(user => user.userType === "client");
+            document.getElementById("total-clients").innerText = clients.length;
+    
+            const clientsList = document.getElementById("clients-list");
+            clientsList.innerHTML = "";
+            clients.forEach(client => {
+                const div = document.createElement("div");
+                div.innerHTML = `
+                    <p>${client.name} (${client.email})</p>
+                    <button class="delete-btn" onclick="deleteUser('${client.email}')">❌ Delete</button>
+                `;
+                clientsList.appendChild(div);
+            });
+        }
+    
+        function loadDevelopers() {
+    const users = getAllUsers();
+    const developers = users.filter(user => user.userType === "developer");
+    document.getElementById("total-developers").innerText = developers.length;
+
+    const developersList = document.getElementById("developers-list");
+    developersList.innerHTML = "";
+
+    developers.forEach(dev => {
+        const devName = dev.name ? dev.name : "Unknown User"; // Handle undefined names
+        const div = document.createElement("div");
+        div.innerHTML = `
+            <p>${devName} (${dev.email})</p>
+            <button class="delete-btn" onclick="deleteUser('${dev.email}')">❌ Delete</button>
+        `;
+        developersList.appendChild(div);
+    });
+}
+    
+        function deleteUser(email) {
+            localStorage.removeItem(email);
+            alert("User deleted successfully.");
+            loadClients();
+            loadDevelopers();
+        }
+    
+        function loadJobs() {
+            const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+            const jobsList = document.getElementById("jobs-list");
+            jobsList.innerHTML = "";
+    
+            if (jobs.length === 0) {
+                jobsList.innerHTML = "<p>No jobs posted.</p>";
+                return;
+            }
+    
+            jobs.forEach((job, index) => {
+                const jobDiv = document.createElement("div");
+                jobDiv.innerHTML = `
+                    <h3>${job.title}</h3>
+                    <p>${job.description}</p>
+                    <button class="delete-btn" onclick="deleteJob(${index})">❌ Delete</button>
+                `;
+                jobsList.appendChild(jobDiv);
+            });
+        }
+    
+        function deleteJob(jobIndex) {
+            let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+            jobs.splice(jobIndex, 1);
+            localStorage.setItem("jobs", JSON.stringify(jobs));
+            alert("Job deleted successfully.");
+            loadJobs();
+        }
+    
+        loadClients();
+        loadDevelopers();
+        loadJobs();
+
+        function logout() {
+            localStorage.removeItem("loggedInUser");
+            alert("You have logged out.");
+            window.location.href = "LogIn.html";
+        }
+
+        function toggleSidebar() {
+    document.querySelector(".sidebar").classList.toggle("open");
+}
+    </script>
+
+</body>
+</html>

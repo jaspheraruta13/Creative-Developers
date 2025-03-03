@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelancer Marketplace - Client Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            display: flex;
+            height: 100vh;
+            background-color: #bfe6f8;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #343a40;
+            color: white;
+            padding-top: 20px;
+            position: fixed;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: 0.3s ease-in-out;
+        }
+
+        /* Profile Section */
+        .profile {
+            padding: 10px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Glowing Border Effect */
+        .glow-border {
+            width: 85px;
+            height: 85px;
+            position: absolute;
+            top: 7.7px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
+            background: conic-gradient(transparent 70%, #2cf6fd);
+            animation: spin 2s linear infinite;
+            z-index: 1;
+            box-shadow: 0 0 8px #2cf6fd;
+        }
+
+        /* Profile Picture */
+        .profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes spin {
+            0% { transform: translateX(-50%) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg); }
+        }
+
+        .profile h3 {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        .profile p {
+            font-size: 14px;
+            color: #ddd;
+        }
+
+        /* Sidebar Buttons */
+        .nav-links {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .sidebar button {
+            display: block;
+            width: 90%;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 8px auto;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .sidebar button:hover {
+            background: linear-gradient(to right, #007bff, #0056b3);
+        }
+
+        .logout-container {
+            margin-top: auto;
+            width: 100%;
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .logout-btn {
+            width: 80%;
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            transition: margin-left 0.3s ease-in-out;
+            width: 100%;
+        }
+
+        .job-list {
+            margin-top: 20px;
+        }
+
+        .job {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .job h3 {
+            margin-bottom: 5px;
+        }
+
+        .job p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* Mobile Menu Button */
+        .menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            right: 10px;
+            background: #343a40;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 5px;
+            z-index: 10;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+                transform: translateX(-100%);
+                position: fixed;
+                transition: transform 0.3s ease-in-out;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Mobile Menu Button -->
+    <button class="menu-btn" onclick="toggleSidebar()">☰ Menu</button>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="profile">
+            <div class="glow-border"></div>
+            <img src="assets/default-profile.jpg" alt="Profile Picture" id="profile-pic">
+            <h3 id="profile-name">User Name</h3>
+            <p id="profile-email">email@example.com</p>
+        </div>
+        
+        <div class="nav-links">
+            <button onclick="window.location.href='Clients.html'">📊 Dashboard</button>
+            <button onclick="window.location.href='jobposting.html'">📝 Post Job</button>
+        </div>
+
+        <div class="logout-container">
+            <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2>Welcome to Your Client Dashboard</h2>
+        <p>Manage your jobs and applications here.</p>
+
+        <div class="job-list" id="job-list">
+            <h3>Your Posted Jobs:</h3>
+            <div id="jobs-container"></div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle Sidebar
+        function toggleSidebar() {
+            document.querySelector(".sidebar").classList.toggle("active");
+        }
+
+        // Check if User is Logged In
+        const loggedInUser = localStorage.getItem("loggedInUser");
+        if (!loggedInUser) {
+            alert("You must log in first!");
+            window.location.href = "LogIn.html";
+        } else {
+            const userData = JSON.parse(localStorage.getItem(loggedInUser));
+            document.getElementById("profile-email").innerText = loggedInUser;
+            document.getElementById("profile-name").innerText = userData.name || loggedInUser.split("@")[0];
+
+            if (userData.profilePic) {
+                document.getElementById("profile-pic").src = userData.profilePic;
+            }
+        }
+
+        function loadPostedJobs() {
+        const jobListContainer = document.getElementById("jobs-container");
+        jobListContainer.innerHTML = ""; // Clear previous job list
+
+        const loggedInUser = localStorage.getItem("loggedInUser");
+        const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+
+        // Filter jobs by the logged-in client
+        const userJobs = jobs.filter(job => job.clientEmail === loggedInUser);
+
+        if (userJobs.length === 0) {
+            jobListContainer.innerHTML = "<p>You have not posted any jobs yet.</p>";
+            return;
+        }
+
+        // Display jobs
+        userJobs.forEach(job => {
+            const jobElement = document.createElement("div");
+            jobElement.classList.add("job");
+            jobElement.innerHTML = `
+                <h3>${job.title}</h3>
+                <p>${job.description}</p>
+                <p><strong>Budget:</strong> $${job.budget}</p>
+                <p><small>Posted on: ${job.posted_at}</small></p>
+            `;
+            jobListContainer.appendChild(jobElement);
+        });
+    }
+
+    // Load jobs when page loads
+    window.onload = loadPostedJobs;
+
+        function logout() {
+            localStorage.removeItem("loggedInUser");
+            alert("You have logged out.");
+            window.location.href = "LogIn.html";
+        }
+
+    </script>
+
+</body>
+</html>
