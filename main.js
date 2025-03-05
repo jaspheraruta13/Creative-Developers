@@ -2,11 +2,13 @@ const menuBtn = document.getElementById("menu-btn");
 const navLinks = document.getElementById("nav-links");
 const menuBtnIcon = menuBtn.querySelector("i");
 
+
 menuBtn.addEventListener("click", (e) => {
   navLinks.classList.toggle("open");
 
   const isOpen = navLinks.classList.contains("open");
   menuBtnIcon.setAttribute("class", isOpen ? "ri-close-line" : "ri-menu-line");
+  
 });
 
 navLinks.addEventListener("click", (e) => {
@@ -62,3 +64,14 @@ ScrollReveal().reveal(".header__image__card", {
 });
 
 console.log("Animated border script loaded.");
+
+document.getElementById("developer-btn").addEventListener("click", function (event) {
+  event.preventDefault(); // Prevent default link behavior
+
+  // Detect if the user is on mobile (screen width less than 768px)
+  if (window.innerWidth <= 768) {
+    window.location.href = "responsivePage.html"; // Redirect to mobile-friendly page
+  } else {
+    window.location.href = "Dev.html"; // Redirect to desktop page
+  }
+});
