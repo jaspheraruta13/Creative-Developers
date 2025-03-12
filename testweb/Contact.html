@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jaspher Arota - Web Developer</title>
+   <style>
+    body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #212121;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    
+}
+header {
+    background: #212121; /* Dark background */
+    padding: 15px 0;
+    text-align: center;
+    box-shadow: 0 0 85px #14FFEC, 0 0 30px #0D7377, 0 0 45px #50a9d4; /* Glowing effect */
+    position: relative;
+    z-index: 1000;
+}
+
+/* Navigation Styles */
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Navigation List */
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+/* Navigation Links */
+nav ul li a {
+    position: relative;
+    text-decoration: none;
+    color: #a1ddf3; /* Ice Blue */
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 5px 10px;
+    transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+}
+
+/* Glow Effect on Hover */
+nav ul li a:hover,
+nav ul li a.active {
+    color: #a1ddf3; /* Ice Blue */
+    text-shadow: 0 0 5px #a1ddf3, 0 0 10px #78c3eb, 0 0 15px #50a9d4;
+}
+
+/* Glowing Underline Animation */
+nav ul li a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -5px;
+    width: 0;
+    height: 2px;
+    background: #a1ddf3; /* Ice Blue */
+    box-shadow: 0 0 5px #a1ddf3, 0 0 10px #78c3eb, 0 0 15px #50a9d4;
+    transition: width 0.4s ease-in-out, left 0.4s ease-in-out;
+}
+
+nav ul li a:hover::after,
+nav ul li a.active::after {
+    width: 100%;
+    left: 0;
+}
+
+/* 🔽🔽🔽 RESPONSIVE DESIGN WITH SMOOTH TOGGLE ANIMATION 🔽🔽🔽 */
+
+/* Hide Navigation for Small Screens */
+.menu-toggle {
+    display: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #a1ddf3;
+    background: none;
+    border: none;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    z-index: 1001;
+}
+
+/* Mobile Navigation */
+@media (max-width: 768px) {
+    nav {
+        position: relative;
+    }
+
+    nav ul {
+        display: flex;
+        flex-direction: column;
+        background: #111;
+        position: absolute;
+        width: 100%;
+        top: 60px;
+        left: 0;
+        padding: 10px 0;
+        box-shadow: 0 0 15px #a1ddf3, 0 0 30px #78c3eb;
+        text-align: center;
+
+        /* Hidden by default */
+        height: 0;
+        overflow: hidden;
+        transition: height 0.5s ease-in-out;
+    }
+
+    nav ul.show {
+        height: 250px; /* Adjust this height based on the number of menu items */
+    }
+
+    nav ul li {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    nav ul.show li {
+        opacity: 1;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+    
+}
+
+@media (max-width: 768px) {
+    .home-container {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+.home{
+    margin: 100px;
+}
+
+@keyframes glow {
+    0% { text-shadow: 0 0 5px #00e1ff, 0 0 10px #00e1ff, 0 0 15px #00e1ff; }
+    50% { text-shadow: 0 0 10px #1fd1ff, 0 0 20px #1fd1ff, 0 0 30px #1fd1ff; }
+    100% { text-shadow: 0 0 5px #00e1ff, 0 0 10px #00e1ff, 0 0 15px #00e1ff; }
+}
+
+.Hblue {
+    font-size: 2rem; /* Adjust size if needed */
+    font-weight: bold;
+    color: #00e1ff; /* Ice blue color */
+    animation: glow 1.5s infinite alternate; /* Smooth glowing effect */
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+
+.container {
+    margin-top: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.container form{
+  width: 670px;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  box-shadow: 20px 20px 50px rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.container form h1{
+  color: #fff;
+  font-weight: 500;
+  margin-top: 20px;
+  width: 500px;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.container form input{
+  width: 290px;
+  height: 40px;
+  padding-left: 10px;
+  outline: none;
+  border: none;
+  font-size: 15px;
+  margin-bottom: 10px;
+  background: none;
+  border-bottom: 2px solid #fff;
+
+}
+
+.container form::placeholder{
+  color: #ddd;
+
+}
+
+.container form #lastname,
+.container form #mobile{
+  margin-left: 20px;
+}
+
+.container form h4{
+  color: #fff;
+  font-weight: 300;
+  width: 600px;
+  margin-top: 20px;
+
+}
+
+.container form textarea{
+  background: none;
+  border: none;
+  border-bottom: 2px solid #fff;
+  color: #fff;
+  font-weight: 200;
+  font-size: 15px;
+  padding: 10px;
+  outline: none;
+  min-width: 600px;
+  max-width: 600px;
+  min-height: 80px;
+  max-height: 80px;
+}
+
+.container form #button{
+  border: none;
+  background: #fff;
+  border-radius: 5px;
+  margin-top: 20px;
+  font-weight: 600;
+  font-size: 20px;
+  color: #333;
+  width: 100px;
+  padding: 0;
+  margin-left: 500px;
+  margin-bottom: 30px;
+  transition: 0.3s;
+}
+
+.container form #button:hover {
+  opacity: 0.7;
+}
+/* Full width inputs on small screens */
+@media (max-width: 400px) {
+    .container form input {
+        max-width: 100%;
+    }
+}
+
+.container form h4 {
+    color: #fff;
+    font-weight: 300;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.container form textarea {
+    background: none;
+    border: none;
+    border-bottom: 2px solid #fff;
+    color: #fff;
+    font-weight: 200;
+    font-size: 15px;
+    padding: 10px;
+    outline: none;
+    width: 100%;
+    min-height: 80px;
+    max-height: 80px;
+    resize: none;
+}
+
+/* Button Styling */
+.container form #button {
+    border: none;
+    background: #fff;
+    border-radius: 5px;
+    margin-top: 20px;
+    font-weight: 600;
+    font-size: 20px;
+    color: #333;
+    width: 120px;
+    padding: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center;
+}
+
+/* Center the button on mobile */
+@media (max-width: 600px) {
+    .container form #button {
+        margin: 20px auto 30px;
+        display: block;
+    }
+}
+
+.container form #button:hover {
+    opacity: 0.7;
+}
+
+   </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="Hblue">Welcome!</h1>
+        <button class="menu-toggle">☰</button>
+        <nav>
+            <ul>
+                <li><a href="portfolioindex.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="services.html">Service</a></li>
+                <li><a href="Portfolio.html">Portfolio</a></li>
+                <li><a href="#" class="active">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <form >
+            <h1>Contact us</h1>
+            <input type="text" id="firstname" placeholder="FIrst Name" required>
+            <input type="text" id="lastname" placeholder="Last Name" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="text" id="mobile" placeholder="Mobile" required>
+            <h4>Type Your Messege Here...</h4>
+            <textarea required></textarea>
+            <input type="submit" value="Send" id="button">
+        </form>
+    </div>
+
+<script src="script.js"></script>
+</body>
+</html>
